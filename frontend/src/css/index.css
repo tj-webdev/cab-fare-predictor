@@ -1,0 +1,57 @@
+*{
+  font-family: 'Nunito', sans-serif;
+}
+
+body{
+  background-color: #FF4B00;
+}
+
+label{
+  color: #212529;
+  font-weight: 550;
+  margin-bottom: 5px !important;
+}
+
+input,button{
+  box-shadow: none !important;
+}
+
+.btn{
+  padding: 6px 15px;
+  border-radius: 50px;
+}
+
+.org-color{
+  color: #FF4B00;
+}
+
+/* Custom button */
+.custom-btn{
+  color: #fff;
+  font-weight: 600;
+  background-color: #FF4B00;
+}
+
+.custom-btn:hover{
+  color: #fff;
+  background-color: #E14201;
+  border: 1px solid #E14201;
+}
+
+/* Active Link */
+.active{
+  border-color: #fff !important;
+  color: #E14201 !important;
+  background-color: #fff !important;
+  font-weight: 500;
+}
+
+/* Navbar Title */
+
+.navbar-brand{
+  color: #fff;
+}
+
+.navbar-brand:hover{
+  color: #fff;
+}
