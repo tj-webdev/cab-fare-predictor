@@ -6,7 +6,7 @@ import Home from "./Home";
 import Dashboard from "./Dashboard";
 import NotFound from './NotFound';
 
-import userAuthStore from './auth/userAuth';
+import userAuthStore from './store/authStore';
 import { useEffect } from 'react';
 
 function App() {

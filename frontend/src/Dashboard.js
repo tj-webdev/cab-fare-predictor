@@ -7,7 +7,7 @@ export default function Dashboard() {
     <div>
       <div className='container'>
         <div className='row'>
-          <div className='col-md-3 mt-5'>
+          <div className='col-md-4 mt-5'>
             <BookingForm />
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
-import userAuthStore from './auth/userAuth';
+import userAuthStore from './store/authStore';
 import { useNavigate } from 'react-router-dom';
 
 const initialValues = {

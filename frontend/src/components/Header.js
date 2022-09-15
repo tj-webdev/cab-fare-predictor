@@ -1,7 +1,7 @@
 import React from 'react';
 import {NavLink} from 'react-router-dom';
 import Logout from './Logout';
-import userAuthStore from '../auth/userAuth';
+import userAuthStore from '../store/authStore';
 
 export default function Header() {
 
