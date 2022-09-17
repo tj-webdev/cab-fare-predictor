@@ -1,13 +1,14 @@
 import create from "zustand";
 
+
+
 const bookingStore = create((set)=>({
   bookingData: {
     pickup: '',
-    destination: '',
-    cabId: '',
+    drop: ''
   },
 
-  setBooking: (data) => set({bookingData: data})
+  setPickDest: (data) => set({bookingData: data})
 
 }));
 

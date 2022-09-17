@@ -46,6 +46,21 @@ input,button{
   font-weight: 500;
 }
 
+/* Cab list */
+
+.cab-list{
+  display: block;
+  cursor: pointer;
+}
+
+.cab-list input{
+  display: none;
+}
+
+.cab-list input:checked + .cab-data{
+  border-color: #212529 !important;
+}
+
 /* Navbar Title */
 
 .navbar-brand{
