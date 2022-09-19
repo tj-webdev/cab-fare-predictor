@@ -13,30 +13,30 @@ const cabList = [
   {
     id: 1,
     img: jeep2,
-    name: 'Basic Cab',
+    name: 'Mini',
     mPrice: 110, 
     nPrice: 130,
   },
   {
     id: 2,
     img: sedan,
-    name: 'Delux Cab',
-    mPrice: 50, 
-    nPrice: 60,
+    name: 'Delux',
+    mPrice: 150, 
+    nPrice: 180,
   },
   {
     id: 3,
     img: jeep,
-    name: 'Jeep',
-    mPrice: 80, 
-    nPrice: 90,
+    name: 'Premium',
+    mPrice: 180, 
+    nPrice: 210,
   },
   {
     id: 4,
     img: sports,
-    name: 'Sports',
-    mPrice: 150, 
-    nPrice: 180,
+    name: 'VIP',
+    mPrice: 200, 
+    nPrice: 230,
   }
 ]
 
