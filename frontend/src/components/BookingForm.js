@@ -6,16 +6,8 @@ import { IoIosArrowBack, IoMdLocate } from 'react-icons/io';
 import { Autocomplete } from '@react-google-maps/api';
 import geocode from "react-geocode";
 
-
-// Check whether it is day or night
-function isDayOrNight(){
-  let hours = new Date().getHours();
-  return (hours > 6 && hours < 20) ? true : false;
-}
-
 export default function BookingForm(props) {
 
-  const isDayTime = isDayOrNight();
   const [step,setStep] = useState(1);
   const [isLoading, setLoading] = useState(false);
 
@@ -26,19 +18,31 @@ export default function BookingForm(props) {
     setRouteInfo: state.setRouteInfo,
   }));
 
+  // Check whether it is day or night 
+  // From 5:00 AM to 7:59 PM == Day | else == Night
+  function isDayOrNight(){
+    let hours = Number(routeInfo.pickupTime.split(':')[0]);
+    return (hours >= 5 && hours < 20) ? true : false;
+  }
+  const isDayTime = isDayOrNight();
+
   // Pickup & drop location handling
 
   const pickupRef = useRef();
   const dropRef = useRef();
+  const pickupTimeRef = useRef();
 
   const submitLocation = async () => {
     setLoading(true);
     setError('');
     if(pickupRef.current.value==='' || dropRef.current.value===''){
-      setError('Enter pickup & drop location!');        
+      setError('Enter both pickup & drop location!');        
     }
     else if(pickupRef.current.value === dropRef.current.value){
       setError('Pickup & drop location cannot be same!');
+    }
+    else if(pickupTimeRef.current.value===''){
+      setError('Enter pickup time!');
     }
     else{
       // Get directions using Directions API
@@ -56,6 +60,7 @@ export default function BookingForm(props) {
         setRouteInfo({
           pickup: pickupRef.current.value, 
           drop: dropRef.current.value,
+          pickupTime: pickupTimeRef.current.value,
           distance: distance,
           duration: duration,
         });
@@ -96,34 +101,15 @@ export default function BookingForm(props) {
     });
   }
 
-  // Select cab and do booking
-
-  const cabid = useRef();
-
-
-  // const book = async () => {
-  //   setLoading(true);
-  //   try{
-  //     setLoading(false);
-      // setBooking(formData);
-      // setStep((prev) => prev+1);
-  //   }
-  //   catch(err){
-  //     setLoading(false);
-      // setError('Invalid location!');
-  //   }
-  // }
-
-
 
   return (
     <div>
       {
         step===1 && <>
           <div className="p-4 bg-white shadow rounded">
-            <h4 className="mb-3 fw-bold">ENTER LOCATION</h4>
+            <h4 className="mb-3 fw-bold">START A RIDE</h4>
             <div className="mb-3">
-              <label className="form-label">Pickup</label>
+              <label className="form-label">Pickup Location</label>
               <div className="pickup-input">
                 <Autocomplete>
                   <input type="text" 
@@ -144,7 +130,7 @@ export default function BookingForm(props) {
               </div>
             </div>
             <div className="mb-3">
-              <label className="form-label">Drop</label>
+              <label className="form-label">Drop Location</label>
               <Autocomplete>
                 <input type="text" 
                   name="drop" 
@@ -154,6 +140,17 @@ export default function BookingForm(props) {
                   ref={dropRef}
                 />
               </Autocomplete>
+            </div>
+            <div className="mb-3">
+              <label className="form-label">Pickup Time</label>
+              <div className="pickup-input">
+              <input type="time" 
+                name="pickup" 
+                className="shadow-none form-control"
+                defaultValue={routeInfo.pickupTime}
+                ref={pickupTimeRef}
+              />
+              </div>
             </div>
 
             {error ? <div className="text-danger mb-2">{error}</div> : null}
@@ -175,6 +172,7 @@ export default function BookingForm(props) {
       }
       {
         step===2 && <>
+          {console.log(routeInfo.pickupTime)}
           <div className="p-4 bg-white shadow rounded">
             <h4 className="mb-3 fw-bold d-flex align-items-center justify-content-between">
               <span className='mt-1'>SELECT CAB</span>
@@ -194,21 +192,24 @@ export default function BookingForm(props) {
                   const bPrice = (!isDayTime) ? cab.nPrice : cab.mPrice;
                   return (
                     <label key={i} className='cab-list mb-3'>
-                      <input type="radio" name="cabid" value={String(cab.id)} ref={cabid} />
+                      <input type="radio" name="cabid" value={String(cab.id)} />
                       <div className="cab-data d-flex align-items-center border rounded-3 py-2 px-3">
                         <div className="lottie-img w-50 me-3">
                           {<Lottie animationData={cab.img} />}
                         </div>
-                        <span className='d-flex justify-content-between align-items-center w-100'>
-                          <span className="text-secondary">
+                        <div className='d-flex justify-content-between align-items-center w-100'>
+                          <div className="text-secondary">
                             {cab.name} 
-                            <br />
-                            &#8377;{bPrice} / Km
-                          </span>
-                          <h6 className="fw-bold mb-0">
+                            <div className='small'>
+                              &#8377;{bPrice} / Km
+                              <br />
+                              {cab.passenger}
+                            </div>
+                          </div>
+                          <h6 className="fw-bold mb-0 text-primary">
                             &#8377;{ Math.floor(bPrice * routeInfo.distance) }
                           </h6>
-                        </span>
+                        </div>
                       </div>
                     </label>
                   )

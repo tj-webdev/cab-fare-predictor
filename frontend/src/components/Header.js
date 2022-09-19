@@ -19,7 +19,6 @@ export default function Header() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
                 { userAuth.loggedIn === false && <NavLink className="btn fw-bold" to="/">Home</NavLink> }
-                {/* { userAuth.loggedIn === true && <NavLink className="btn" to="/dashboard">Dashboard</NavLink> } */}
               </li>
             </ul>
             {

@@ -64,10 +64,29 @@ input,button{
 
 
 /* Google Map */
+
+.map-container{
+  min-height: 80vh;
+}
+
+@media screen and (max-width: 991px) {
+  .map-container{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 93vh;
+    z-index: -1;
+    margin: 0 !important;
+  }
+}
+
 .google-map{
   width: 100%;
   height: 100%;
 }
+
+
 
 /* pickup input  */
 
