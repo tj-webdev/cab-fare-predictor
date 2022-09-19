@@ -2,9 +2,10 @@ import React, { useRef, useState } from 'react';
 import Lottie from "lottie-react";
 import cabList from '../store/cabList';
 import routeInfoStore from '../store/routeInfoStore';
-import { IoIosArrowBack } from 'react-icons/io';
-
+import { IoIosArrowBack, IoMdLocate } from 'react-icons/io';
 import { Autocomplete } from '@react-google-maps/api';
+import geocode from "react-geocode";
+
 
 // Check whether it is day or night
 function isDayOrNight(){
@@ -69,6 +70,31 @@ export default function BookingForm(props) {
     setLoading(false);
   }
 
+  // Get current location
+
+  function checkLocationAccess(){
+    setError('');
+    if(!navigator.geolocation) {
+      setError('Location access failed!');
+      return;
+    }
+    navigator.geolocation.getCurrentPosition(accessCurrentLocation,(error)=>{
+      setError('Location access failed!');
+    });
+  }
+
+  function accessCurrentLocation(position){
+    let lat = position.coords.latitude;
+    let lng = position.coords.longitude;
+
+    geocode.setApiKey(process.env.REACT_APP_MAP_API_KEY);
+    geocode.fromLatLng(lat, lng).then((response) => {
+      pickupRef.current.value = response.results[0].formatted_address;
+    },
+    (error) => {
+      setError('Location detection failed!');
+    });
+  }
 
   // Select cab and do booking
 
@@ -98,14 +124,24 @@ export default function BookingForm(props) {
             <h4 className="mb-3 fw-bold">ENTER LOCATION</h4>
             <div className="mb-3">
               <label className="form-label">Pickup</label>
-              <Autocomplete>
-                <input type="text" 
-                  name="pickup" 
-                  className="shadow-none form-control" 
-                  placeholder="From where to pick you..."
-                  ref={pickupRef}
-                />
-              </Autocomplete>
+              <div className="pickup-input">
+                <Autocomplete>
+                  <input type="text" 
+                    name="pickup" 
+                    className="shadow-none form-control"
+                    placeholder="From where to pick you..."
+                    defaultValue={routeInfo.pickup}
+                    ref={pickupRef}
+                  />
+                </Autocomplete>
+                <button 
+                  onClick={checkLocationAccess}
+                  className="btn p-1 rounded-0 btn-outline-dark ms-1" 
+                  type="button"
+                >
+                  <IoMdLocate /> <span className='ms-1'>Current Location</span>
+                </button>
+              </div>
             </div>
             <div className="mb-3">
               <label className="form-label">Drop</label>
@@ -114,6 +150,7 @@ export default function BookingForm(props) {
                   name="drop" 
                   className="shadow-none form-control" 
                   placeholder="Where to drop you..."
+                  defaultValue={routeInfo.drop}
                   ref={dropRef}
                 />
               </Autocomplete>
@@ -141,7 +178,7 @@ export default function BookingForm(props) {
           <div className="p-4 bg-white shadow rounded">
             <h4 className="mb-3 fw-bold d-flex align-items-center justify-content-between">
               <span className='mt-1'>SELECT CAB</span>
-              <button onClick={() => setStep((prev) => prev-1)} className="btn fw-bold px-2">
+              <button onClick={()=>setStep((prev) => prev-1)} className="btn fw-bold px-2">
                 <IoIosArrowBack className='fs-4' />
               </button>
             </h4>

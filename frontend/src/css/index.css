@@ -69,6 +69,28 @@ input,button{
   height: 100%;
 }
 
+/* pickup input  */
+
+.pickup-input{
+  display: grid;
+  grid-template-columns: 3fr auto;
+}
+
+.pickup-input button{
+  border-radius: 6px !important;
+  padding-inline: 10px !important;
+  display: flex;
+  align-items: center;
+}
+
+.pickup-input button span{
+  display: none;
+}
+
+.pickup-input button:hover span{
+  width: max-content;
+  display: inline-block;
+}
 
 /* Navbar Title */
 
