@@ -46,6 +46,11 @@ input,button{
   font-weight: 500;
 }
 
+/* Hero text */
+.hero-text{
+  font-size: 18px;
+}
+
 /* Cab list */
 
 .cab-list{

@@ -5,14 +5,16 @@ import routeInfoStore from '../store/routeInfoStore';
 import { IoIosArrowBack, IoMdLocate } from 'react-icons/io';
 import { Autocomplete } from '@react-google-maps/api';
 import geocode from "react-geocode";
+import {Formik, Form, Field} from 'formik';
 
 export default function BookingForm(props) {
 
+  // Form step and erro handling + submit button loading 
   const [step,setStep] = useState(1);
+  const [error, setError] = useState(null);
   const [isLoading, setLoading] = useState(false);
 
-  const [error, setError] = useState(null);
-
+  // Zustand state containing route info - pickup, drop, pickup time, distance & duration 
   const {routeInfo, setRouteInfo} = routeInfoStore((state)=>({
     routeInfo: state.routeInfo,
     setRouteInfo: state.setRouteInfo,
@@ -35,6 +37,7 @@ export default function BookingForm(props) {
   const submitLocation = async () => {
     setLoading(true);
     setError('');
+    props.setDirection(null);
     if(pickupRef.current.value==='' || dropRef.current.value===''){
       setError('Enter both pickup & drop location!');        
     }
@@ -68,14 +71,13 @@ export default function BookingForm(props) {
         setStep((prev) => prev+1);
       }
       catch(err){
-        props.setDirection(null);
         setError('Cannot find route!');
       }
     }
     setLoading(false);
   }
 
-  // Get current location
+  // Check location accessibility & get current location
 
   function checkLocationAccess(){
     setError('');
@@ -101,6 +103,17 @@ export default function BookingForm(props) {
     });
   }
 
+  // Submit booking
+  const submitBooking = (formData) => {
+    // store data in db (future upgrades)
+    setStep((prev)=>prev+1);
+  }
+
+  const goToHome = () => {
+    setStep(1);
+    setRouteInfo({pickup: '', drop: '', pickupTime: '', distance: '', duration: ''});
+    props.setDirection(null);
+  }
 
   return (
     <div>
@@ -172,59 +185,77 @@ export default function BookingForm(props) {
       }
       {
         step===2 && <>
-          {console.log(routeInfo.pickupTime)}
-          <div className="p-4 bg-white shadow rounded">
-            <h4 className="mb-3 fw-bold d-flex align-items-center justify-content-between">
-              <span className='mt-1'>SELECT CAB</span>
-              <button onClick={()=>setStep((prev) => prev-1)} className="btn fw-bold px-2">
-                <IoIosArrowBack className='fs-4' />
-              </button>
-            </h4>
-            <div className="mb-3">
-              <label>Distance:</label> {routeInfo.distance} Km
-              <br />
-              <label>Estimated Time:</label> {routeInfo.duration}
-            </div>
+          <Formik initialValues={{cabid: '1'}} onSubmit={submitBooking}>
+            <Form>
+              <div className="p-4 bg-white shadow rounded">
+                <h4 className="mb-3 fw-bold d-flex align-items-center justify-content-between">
+                  <span className='mt-1'>SELECT CAB</span>
+                  <button onClick={()=>setStep((prev) => prev-1)} className="btn fw-bold px-2">
+                    <IoIosArrowBack className='fs-4' />
+                  </button>
+                </h4>
+                <div className="mb-3">
+                  <label>Distance:</label> {routeInfo.distance} Km
+                  <br />
+                  <label>Estimated Time:</label> {routeInfo.duration}
+                </div>
 
-            <div className="mb-4">
-              {
-                cabList.map((cab,i)=>{
-                  const bPrice = (!isDayTime) ? cab.nPrice : cab.mPrice;
-                  return (
-                    <label key={i} className='cab-list mb-3'>
-                      <input type="radio" name="cabid" value={String(cab.id)} />
-                      <div className="cab-data d-flex align-items-center border rounded-3 py-2 px-3">
-                        <div className="lottie-img w-50 me-3">
-                          {<Lottie animationData={cab.img} />}
-                        </div>
-                        <div className='d-flex justify-content-between align-items-center w-100'>
-                          <div className="text-secondary">
-                            {cab.name} 
-                            <div className='small'>
-                              &#8377;{bPrice} / Km
-                              <br />
-                              {cab.passenger}
+                <div className="mb-4">
+                  {
+                    cabList.map((cab,i)=>{
+                      const bPrice = (!isDayTime) ? cab.nPrice : cab.mPrice;
+                      return (
+                        <label key={i} className='cab-list mb-3'>
+                          <Field type="radio" name="cabid" value={String(cab.id)} />
+                          <div className="cab-data d-flex align-items-center border border-2 rounded-3 py-2 px-3">
+                            <div className="lottie-img w-50 me-3">
+                              {<Lottie animationData={cab.img} />}
+                            </div>
+                            <div className='d-flex justify-content-between align-items-center w-100'>
+                              <div className="text-secondary">
+                                {cab.name} 
+                                <div className='small'>
+                                  &#8377;{bPrice} / Km
+                                  <br />
+                                  {cab.passenger}
+                                </div>
+                              </div>
+                              <h6 className="fw-bold mb-0 text-primary">
+                                &#8377;{ Math.floor(bPrice * routeInfo.distance) }
+                              </h6>
                             </div>
                           </div>
-                          <h6 className="fw-bold mb-0 text-primary">
-                            &#8377;{ Math.floor(bPrice * routeInfo.distance) }
-                          </h6>
-                        </div>
-                      </div>
-                    </label>
-                  )
-                })
-              }
-            </div>
+                        </label>
+                      )
+                    })
+                  }
+                </div>
 
-            {error ? <div className="text-danger mt-3 mb-3">{error}</div> : null}
+                {error ? <div className="text-danger mt-3 mb-3">{error}</div> : null}
 
-            <button type="button" className="shadow-none w-100 btn btn-dark btn-sm" disabled={isLoading}>
-              {
-                isLoading ? 
-                (<><span className="spinner-border spinner-border-sm" role="status"></span> Generating...</>)
-                : "BOOK"
-              }
+                <button 
+                  type="submit" 
+                  className="shadow-none w-100 btn btn-dark btn-sm" 
+                  disabled={isLoading}
+                  onClick={submitBooking}
+                >
+                  {
+                    isLoading ? 
+                    (<><span className="spinner-border spinner-border-sm" role="status"></span> Generating...</>)
+                    : "BOOK"
+                  }
+                </button>
+              </div>
+            </Form>
+          </Formik>
+        </>
+      }
+      {
+        step===3 && <>
+          <div className="p-4 bg-white shadow rounded text-center">
+            <h4 className="mb-3 fw-bold">Booking done!</h4>
+            <button onClick={goToHome} className='btn btn-dark fw-bold'>
+              Go to Home
             </button>
           </div>
         </>

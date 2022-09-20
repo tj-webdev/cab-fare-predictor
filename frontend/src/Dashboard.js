@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import BookingForm from './components/BookingForm';
 import { GoogleMap, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
+import routeInfoStore from './store/routeInfoStore';
 
 const center = {
   lat: 	28.651952,
@@ -10,6 +11,7 @@ const center = {
 export default function Dashboard() {
 
   const [direction, setDirection] = useState(null);
+  const routeInfo = routeInfoStore((state) => state.routeInfo);
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -40,7 +42,7 @@ export default function Dashboard() {
                 center={center}
                 zoom={6}
               >
-                { direction && <DirectionsRenderer directions={direction} /> }
+                { routeInfo.pickup!=='' && direction && <DirectionsRenderer directions={direction} /> }
               </GoogleMap>
             </div>
           </div>

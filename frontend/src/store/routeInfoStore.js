@@ -5,8 +5,8 @@ const routeInfoStore = create((set)=>({
     pickup: '',
     drop: '',
     pickupTime: '',
-    distance: '0',
-    duration: '0'
+    distance: '',
+    duration: ''
   },
 
   setRouteInfo: (data) => set({routeInfo: data}),
