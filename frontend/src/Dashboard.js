@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import BookingForm from './components/BookingForm';
 import { GoogleMap, useJsApiLoader, DirectionsRenderer } from '@react-google-maps/api';
 import routeInfoStore from './store/routeInfoStore';
@@ -8,17 +8,18 @@ const center = {
   lng: 77.231495
 };
 
-export default function Dashboard() {
+const libraries = ['places'];
 
-  const [direction, setDirection] = useState(null);
-  const routeInfo = routeInfoStore((state) => state.routeInfo);
+export default function Dashboard() {
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: process.env.REACT_APP_MAP_API_KEY,
-    libraries: ['places']
+    libraries: libraries
   });
-  
+
+  // Zustand state containing route info - direction
+  const direction = routeInfoStore((state) => state.direction);
 
   if(!isLoaded){
     return (
@@ -32,9 +33,9 @@ export default function Dashboard() {
     return(
       <div>
         <div className="container-md mt-3 position-relative">
-          <div className="row ">
+          <div className="row ">            
             <div className="col-lg-4 col-md-6 col-sm-6 px-lg-3 p-0">
-              <BookingForm setDirection={setDirection} />
+              <BookingForm />
             </div>
             <div className="col-lg-8 p-2 bg-white rounded map-container">
               <GoogleMap
@@ -42,7 +43,7 @@ export default function Dashboard() {
                 center={center}
                 zoom={6}
               >
-                { routeInfo.pickup!=='' && direction && <DirectionsRenderer directions={direction} /> }
+                { direction && <DirectionsRenderer options={{directions: direction}} /> }
               </GoogleMap>
             </div>
           </div>

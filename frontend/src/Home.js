@@ -4,7 +4,7 @@ import { FiArrowRight } from 'react-icons/fi';
 
 export default function Home() {
   return (
-    <div className='container mt-3 mb-5'>
+    <div className='container mt-3 mb-4'>
       <div className='row align-items-center'>
         <div className="col-md-6 order-md-0 order-1 text-light mt-3">
           <h1 className='display-5 fw-bold'>Lets Book A Cab For You!</h1>

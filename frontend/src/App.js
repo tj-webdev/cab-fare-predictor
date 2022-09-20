@@ -14,6 +14,7 @@ function App() {
   const {userAuth, fetch} = userAuthStore((state)=> ({userAuth: state.userAuth, fetch: state.fetch}));
   useEffect(()=>{
     fetch();
+    // eslint-disable-next-line
   },[]);
 
   return (
