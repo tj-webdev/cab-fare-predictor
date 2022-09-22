@@ -2,12 +2,12 @@
 
 It is a web app built on MERN stack. It predicts the cost of the ride based on user's pickup and drop location along with pickup timing(morning or night). 
 
-The project's frontend and backend is built separately so that more features can be added easily in future.
+The project's frontend and backend are built separately so that more features can be added easily in future.
 
 ## Features
 
 1. JWT based authentication system.
-2. Google map that shows direction (from pickup to drop location)
+2. Google map that shows path (from pickup to drop location)
 3. Select current location as pickup location
 4. Enter desired pickup timing
 5. Distance and estimated time of drop between two locations
