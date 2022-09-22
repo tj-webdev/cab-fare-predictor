@@ -33,8 +33,8 @@ export default function Dashboard() {
     return(
       <div>
         <div className="container-md mt-3 position-relative">
-          <div className="row ">            
-            <div className="col-lg-4 col-md-6 col-sm-6 px-lg-3 p-0">
+          <div className="row ">
+            <div className="col-lg-4 col-md-6 px-lg-3 p-0">
               <BookingForm />
             </div>
             <div className="col-lg-8 p-2 bg-white rounded map-container">

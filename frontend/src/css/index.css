@@ -67,8 +67,14 @@ input,button{
 }
 
 
+/* Dashboard main container */
+@media screen and (max-width: 768px) {
+  .container-md{
+    padding-inline: 25px;
+  }
+}
 
-/* Google Map */
+/* Google Map Container */
 
 .map-container{
   min-height: 80vh;
@@ -83,6 +89,13 @@ input,button{
     height: 93vh;
     z-index: -1;
     margin: 0 !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .map-container{
+    position: static;
+    margin: 25px 0 !important;
   }
 }
 
