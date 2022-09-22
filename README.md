@@ -16,6 +16,7 @@ The project's frontend and backend is built separately so that more features can
 ## Technologies & Packages
 
 Backend - Node, Express, Yup, Mongoose, Bcrypt, cors, cookie-parser
+
 Frontend - React, Formik, Yup, Axios, Zustand, React Router, lottie-react, geocoder, react-google-maps/api (package)
 
 ## Environment Variables
